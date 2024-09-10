@@ -47,7 +47,6 @@ class Game:
         self.columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
 
-
     def print_board(self):
         # Print the chess board in a formatted style
         print("   " + "   ".join(self.columns))
@@ -56,3 +55,5 @@ class Game:
             print(f"{8 - i} | {' | '.join(str(piece) for piece in row)} | {8 - i}")
             print("  " + "----" * 8)  # Adjusted line length
         print("   " + "   ".join(self.columns))
+
+    def create_board(self):
