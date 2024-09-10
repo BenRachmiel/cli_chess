@@ -1,4 +1,5 @@
 from Piece import *
+import re
 
 
 class Game:
@@ -27,7 +28,6 @@ class Game:
         self.pieces[1][6] = pawn_1_6 = Piece("pawn", 1, 6, False, 'p')
         self.pieces[1][7] = pawn_1_7 = Piece("pawn", 1, 7, False, 'p')
 
-
         self.pieces[6][0] = pawn_6_0 = Piece("pawn", 6, 0, True, 'P')
         self.pieces[6][1] = pawn_6_1 = Piece("pawn", 6, 1, True, 'P')
         self.pieces[6][2] = pawn_6_2 = Piece("pawn", 6, 2, True, 'P')
@@ -46,7 +46,6 @@ class Game:
         self.pieces[7][7] = rook_7_7 = Piece("rook", 7, 7, True, 'R')
         self.columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
-
     def print_board(self):
         # Print the chess board in a formatted style
         print("   " + "   ".join(self.columns))
@@ -56,4 +55,34 @@ class Game:
             print("  " + "----" * 8)  # Adjusted line length
         print("   " + "   ".join(self.columns))
 
-    def create_board(self):
+    def is_move_legal( input_from_user="abcdef"):
+        regex_pattern = r"""
+                     ^(?:  
+                        [KQRBN]?[a-h][1-8]           
+                        |
+                        [KQRBN]?[a-h]?x[a-h][1-8]             
+                        | 
+                        [KQRBN]?[a-h][1-8]\+                  
+                        |
+                        [KQRBN]?[a-h][1-8]\#                  
+                        |                                    
+                        [a-h]x[a-h][1-8] ep                  
+                    )$
+                """
+        return bool(re.match(regex_pattern, str(input_from_user), re.VERBOSE))
+
+    # קלט מהמשתמש
+    move = input("anter location")
+
+    # בדיקת חוקיות המהלך
+    if is_move_legal(move):
+        print("המהלך חוקי לפי הסימון האלגברי.")
+    else:
+        print("המהלך לא חוקי לפי הסימון האלגברי.")
+
+
+
+# מהלך לפי סימון אלגברי (לדוגמה, Qxe4, exd5, או Qd4+):
+
+
+
