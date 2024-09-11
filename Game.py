@@ -86,3 +86,38 @@ class Game:
 
 
 
+
+
+
+
+    def is_move_legal(input_from_user):
+        regex_pattern = r"""
+                     ^(?:  
+                        [KQRBN]?[a-h][1-8]           
+                        |
+                        [KQRBN]?[a-h]?x[a-h][1-8]             
+                        | 
+                        [KQRBN]?[a-h][1-8]\+                  
+                        |
+                        [KQRBN]?[a-h][1-8]\#                  
+                        |                                    
+                        [a-h]x[a-h][1-8] ep                  
+                    )$
+                """
+        return bool(re.match(regex_pattern, str(input_from_user), re.VERBOSE))
+
+    # קלט מהמשתמש
+    move = input("enter location")
+
+    # בדיקת חוקיות המהלך
+    if is_move_legal(move):
+        print("המהלך חוקי לפי הסימון האלגברי.")
+    else:
+        print("המהלך לא חוקי לפי הסימון האלגברי.")
+
+
+
+# מהלך לפי סימון אלגברי (לדוגמה, Qxe4, exd5, או Qd4+):
+
+
+
