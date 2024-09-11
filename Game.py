@@ -55,7 +55,7 @@ class Game:
             print("  " + "----" * 8)  # Adjusted line length
         print("   " + "   ".join(self.columns))
 
-    def is_move_legal( input_from_user="abcdef"):
+    def is_move_legal(input_from_user):
         regex_pattern = r"""
                      ^(?:  
                         [KQRBN]?[a-h][1-8]           
@@ -72,7 +72,7 @@ class Game:
         return bool(re.match(regex_pattern, str(input_from_user), re.VERBOSE))
 
     # קלט מהמשתמש
-    move = input("anter location")
+    move = input("enter location")
 
     # בדיקת חוקיות המהלך
     if is_move_legal(move):
