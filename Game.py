@@ -2,12 +2,32 @@ from Piece import *
 import re
 
 
-class Game:
 
+
+class Game:
+    # constractor
     def __init__(self):
         self.pieces = [[Piece() for _ in range(8)] for _ in range(8)]
         self.create_board()
         self.print_board()
+
+    # game process is a function that responsible for the order of the game, and it calls the necessary functions to
+    # run the game
+    def game_process(self):
+        white_player = input("enter white's player name")
+        black_player = input("enter black's player name")
+        while True:
+            white_algebraic_notation = input("white's turn")  # getting the user algebraic_notation input from the cli
+            if self.check_input(white_algebraic_notation):
+                # calling check_input to make sure data is in the correct format
+
+                piece = find_piece_object_through_algebraic_notation(algebraic_notation)  #
+                dest_location =  check_selected_object_is_a_peace(piece)
+                if check_move_is_possible(piece, white_algebraic_notation) == True:
+
+                    move_piece(piece, white_algebraic_notation)
+
+            black_move = input("black's turn")
 
     def create_board(self):
 
@@ -55,7 +75,7 @@ class Game:
             print("  " + "----" * 8)  # Adjusted line length
         print("   " + "   ".join(self.columns))
 
-    def is_move_legal(input_from_user):
+    def check_input(self, input_from_user):
         regex_pattern = r"""
                      ^(?:  
                         [KQRBN]?[a-h][1-8]           
@@ -71,53 +91,21 @@ class Game:
                 """
         return bool(re.match(regex_pattern, str(input_from_user), re.VERBOSE))
 
-    # קלט מהמשתמש
-    move = input("enter location")
+    def move_input(self):
+        # בדיקת חוקיות המהלך
 
-    # בדיקת חוקיות המהלך
-    if is_move_legal(move):
-        print("המהלך חוקי לפי הסימון האלגברי.")
-    else:
-        print("המהלך לא חוקי לפי הסימון האלגברי.")
+        move = input("enter move")
 
+        if self.check_input(move):
+            print("המהלך חוקי לפי הסימון האלגברי.")
+        else:
+            print("המהלך לא חוקי לפי הסימון האלגברי.")
 
+    # מהלך לפי סימון אלגברי (לדוגמה, Qxe4, exd5, או Qd4+):
 
-# מהלך לפי סימון אלגברי (לדוגמה, Qxe4, exd5, או Qd4+):
-
-
-
+    def find_piece_object_through_algebraic_notation(self,algibraic_notation):
 
 
-
-
-    def is_move_legal(input_from_user):
-        regex_pattern = r"""
-                     ^(?:  
-                        [KQRBN]?[a-h][1-8]           
-                        |
-                        [KQRBN]?[a-h]?x[a-h][1-8]             
-                        | 
-                        [KQRBN]?[a-h][1-8]\+                  
-                        |
-                        [KQRBN]?[a-h][1-8]\#                  
-                        |                                    
-                        [a-h]x[a-h][1-8] ep                  
-                    )$
-                """
-        return bool(re.match(regex_pattern, str(input_from_user), re.VERBOSE))
-
-    # קלט מהמשתמש
-    move = input("enter location")
-
-    # בדיקת חוקיות המהלך
-    if is_move_legal(move):
-        print("המהלך חוקי לפי הסימון האלגברי.")
-    else:
-        print("המהלך לא חוקי לפי הסימון האלגברי.")
-
-
-
-# מהלך לפי סימון אלגברי (לדוגמה, Qxe4, exd5, או Qd4+):
 
 
 
