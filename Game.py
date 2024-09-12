@@ -5,6 +5,7 @@ import re
 class Game:
     # constractor
     def __init__(self):
+        self.current_turn = "White"
         self.pieces = [[Piece() for _ in range(8)] for _ in range(8)]
         self.create_board()
         self.print_board()
@@ -16,18 +17,18 @@ class Game:
         white_player = input("Enter white's player name: ")
         black_player = input("Enter black's player name: ")
         while True:
-            algebraic_notation = input("White's turn: ")  # getting the user algebraic_notation input from the cli
-            if not self.check_input(algebraic_notation):
+            algebraic_notation = input(f"{self.current_turn}'s turn: ")  # getting the user algebraic_notation input from the cli
+            if not self.move_input(algebraic_notation):
                 print("Invalid algebraic notation. Please try again.")
                 continue  # This will start the loop over
 
-            piece = self.find_piece_object_through_algebraic_notation(algebraic_notation)
-            if not self.selected_object_isnt_empty(piece):
+            piece_and_destination = self.create_object_and_dest_tuple_through_algebraic_notation(algebraic_notation)
+
+            if not self.selected_object_isnt_empty(piece_and_destination[0]):
                 print("You chose an empty object. Please try again.")
                 continue
 
-            dest_index = self.extracting_index_of_dest(algebraic_notation)
-            if not self.check_move_piece_sync(piece, dest_index):
+            if not self.check_move_piece_sync(piece_and_destination):
                 print("Invalid move for this piece. Please try again.")
                 continue
 
@@ -36,17 +37,20 @@ class Game:
                 continue
 
             # If we've made it this far, the move is valid
-            self.move_piece(piece, dest_index)  # calls out check_if_takes()
+            self.move_piece(piece_and_destination)  # calls out check_if_takes()
             if self.check_if_check():
                 # limit movements as required
                 pass
-
-            # Here you might want to switch turns, check for checkmate, etc.
-            # For example:
-            # self.switch_turn()
-            # if self.is_checkmate():
-            #     print(f"Checkmate! {self.current_player} wins!")
-            #     break
+            if current_turn == "White":
+                current_turn = "Black"
+            else:
+                current_turn = "White"
+        # Here you might want to switch turns, check for checkmate, etc.
+        # For example:
+        # self.switch_turn()
+        # if self.is_checkmate():
+        #     print(f"Checkmate! {self.current_player} wins!")
+        #     break
 
     def create_board(self):
 
@@ -110,18 +114,24 @@ class Game:
                 """
         return bool(re.match(regex_pattern, str(input_from_user), re.VERBOSE))
 
-    def move_input(self):
+    def move_input(self, move):
         # בדיקת חוקיות המהלך
-
-        move = input("enter move")
 
         if self.check_input(move):
             print("המהלך חוקי לפי הסימון האלגברי.")
+            return True
         else:
             print("המהלך לא חוקי לפי הסימון האלגברי.")
+            return False
 
     # מהלך לפי סימון אלגברי (לדוגמה, Qxe4, exd5, או Qd4+):
 
-    def find_piece_object_through_algebraic_notation(self, algibraic_notation):
+    def create_object_and_dest_tuple_through_algebraic_notation(self, algibraic_notation):
 
         return algibraic_notation
+
+    def selected_object_isnt_empty(self, piece):
+        pass
+
+    def extracting_index_of_dest(self, algebraic_notation):
+        return algebraic_notation
