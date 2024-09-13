@@ -135,6 +135,7 @@ class Game:
                 column = ord(algebraic_notation[0].lower()) - 97  # Convert letter to column index
                 if self.current_turn == "White":
                     piece = self.find_piece_in_column(column, "pawn", True)
+                    self.move_piece("g2","g4")
                 else:
                     piece = self.find_piece_in_column(column, "pawn", False)
 
@@ -152,7 +153,7 @@ class Game:
                 pass
 
         # Create the tuple with the piece and destination indices
-        piece_and_destination_tuple = (piece.x,piece.y, array_dest_x_y)
+        piece_and_destination_tuple = (piece.x, piece.y, array_dest_x_y)
         print(piece_and_destination_tuple)
         return piece_and_destination_tuple
 
@@ -190,3 +191,65 @@ class Game:
     def finding_specific_piece(self, algebraic_notation):
         for piece in iterate_column(chess_board, 4):
             pass
+
+    def chess_position_to_index(self, position):
+        """
+        Converts a chess position (e.g., 'e2') to 2D array indices.
+        """
+        column = position[0]
+        row = position[1]
+
+        # Convert column letter to index (a=0, b=1, ..., h=7)
+        column_index = ord(column.lower()) - ord('a')
+
+        # Convert row number to index (1=7, 2=6, ..., 8=0)
+        row_index = 8 - int(row)
+
+        return row_index, column_index
+
+    def chess_position_to_index(self, position):
+        """
+        Converts a chess position (e.g., 'e2') to 2D array indices.
+        """
+        column = position[0]
+        row = position[1]
+
+        # Convert column letter to index (a=0, b=1, ..., h=7)
+        column_index = ord(column.lower()) - ord('a')
+
+        # Convert row number to index (1=7, 2=6, ..., 8=0)
+        row_index = 8 - int(row)
+
+        return row_index, column_index
+
+    def move_piece(self, start_position, end_position):
+        # Get user input for the starting and target positions
+
+        # Convert chess positions to array indices
+        start_row, start_col = self.chess_position_to_index(start_position)
+        end_row, end_col = self.chess_position_to_index(end_position)
+
+        # Get the piece at the starting position
+        current_piece = self.pieces[start_row][start_col]
+
+        # If there's no piece at the starting position, the move is invalid
+        if current_piece is None:
+            print("No piece at the starting position.")
+            return
+
+        # Get the piece at the target position (if any)
+        target_piece = self.pieces[end_row][end_col]
+
+        # You can add logic here to check if the move is legal based on the piece type
+        print(f"{current_piece} moves to {end_position}")
+
+        # Update the board: Create a new tuple with the updated positions
+        pieces_list = [list(row) for row in self.pieces]  # Create a copy of the board to update
+        pieces_list[start_row][start_col] = ""  # Remove the piece from the starting position
+        pieces_list[end_row][end_col] = current_piece  # Move the piece to the target position
+
+        # Convert the board back to tuples
+        self.pieces = tuple([tuple(row) for row in pieces_list])
+
+        # Display the board after the move
+        self.print_board()
