@@ -6,5 +6,7 @@ class Piece:
         self.y = y
         self.is_big = is_big
         self.piece_type_letter = piece_type_letter
+
+
     def __str__(self):
         return self.piece_type_letter

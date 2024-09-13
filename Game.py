@@ -17,7 +17,9 @@ class Game:
         white_player = input("Enter white's player name: ")
         black_player = input("Enter black's player name: ")
         while True:
-            algebraic_notation = input(f"{self.current_turn}'s turn: ")  # getting the user algebraic_notation input from the cli
+            algebraic_notation = input(
+                f"{self.current_turn}'s turn: ")  # getting the user algebraic_notation input from the cli
+
             if not self.move_input(algebraic_notation):
                 print("Invalid algebraic notation. Please try again.")
                 continue  # This will start the loop over
@@ -41,16 +43,10 @@ class Game:
             if self.check_if_check():
                 # limit movements as required
                 pass
-            if current_turn == "White":
-                current_turn = "Black"
+            if self.current_turn == "White":
+                self.current_turn = "Black"
             else:
-                current_turn = "White"
-        # Here you might want to switch turns, check for checkmate, etc.
-        # For example:
-        # self.switch_turn()
-        # if self.is_checkmate():
-        #     print(f"Checkmate! {self.current_player} wins!")
-        #     break
+                self.current_turn = "White"
 
     def create_board(self):
 
@@ -126,12 +122,71 @@ class Game:
 
     # מהלך לפי סימון אלגברי (לדוגמה, Qxe4, exd5, או Qd4+):
 
-    def create_object_and_dest_tuple_through_algebraic_notation(self, algibraic_notation):
+    def create_object_and_dest_tuple_through_algebraic_notation(self, algebraic_notation):
+        # Extracting destination indices from algebraic notation (e.g., 'h7')
+        raw_dest_x_y = algebraic_notation[-2:]
+        array_dest_x_y = self.chess_position_to_indices(raw_dest_x_y)
 
-        return algibraic_notation
+        # Extracting the chosen piece based on the length of the algebraic notation
+        piece = None
+        match len(algebraic_notation):
+            case 2:
+                # Handle simple moves (e.g., 'h7')
+                column = ord(algebraic_notation[0].lower()) - 97  # Convert letter to column index
+                if self.current_turn == "White":
+                    piece = self.find_piece_in_column(column, "pawn", "White")
+                else:
+                    piece = self.find_piece_in_column(column, "pawn", "Black")
+
+            case 3:
+                # Handle moves with captures or special cases (e.g., 'Nxe5')
+                # Implement custom logic based on the algebraic notation
+                pass
+
+            case 4:
+                # Handle castling or promotion (e.g., 'e8=Q')
+                pass
+
+            case 5:
+                # Handle more complex moves (e.g., 'exf6+')
+                pass
+
+        # Create the tuple with the piece and destination indices
+        piece_and_destination_tuple = (piece, array_dest_x_y)
+
+        return piece_and_destination_tuple
+
+    def find_piece_in_column(self, column, piece_type, color):
+        for row, piece in enumerate(self.iterate_column(column)):
+            if piece and piece.type == piece_type and piece.color.lower() == color.lower():
+                return piece
+        return None
+
+    def iterate_column(self, column):
+        for row in range(7, -1, -1):  # Start from bottom (7) to top (0)
+            yield self.pieces[row][column]
 
     def selected_object_isnt_empty(self, piece):
         pass
 
     def extracting_index_of_dest(self, algebraic_notation):
         return algebraic_notation
+
+    def chess_position_to_indices(self, pos):
+        # מיפוי האותיות לעמודות (ציר X)
+        column = ord(self[0].lower()) - ord('a')
+
+        # מיפוי המספרים לשורות (ציר Y)
+        row = 8 - int(self[1])
+
+        return row, column
+
+    def chess_position_to_column(pos):
+        # מיפוי האותיות לעמודות (ציר X)
+        column = ord(pos[0].lower()) - ord('a')
+
+        return column
+
+    def finding_specific_piece(self, algebraic_notation):
+        for piece in iterate_column(chess_board, 4):
+            pass
