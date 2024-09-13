@@ -128,15 +128,15 @@ class Game:
         array_dest_x_y = self.chess_position_to_indices(raw_dest_x_y)
 
         # Extracting the chosen piece based on the length of the algebraic notation
-        piece = None
+        piece = Piece()
         match len(algebraic_notation):
             case 2:
                 # Handle simple moves (e.g., 'h7')
                 column = ord(algebraic_notation[0].lower()) - 97  # Convert letter to column index
                 if self.current_turn == "White":
-                    piece = self.find_piece_in_column(column, "pawn", "White")
+                    piece = self.find_piece_in_column(column, "pawn", True)
                 else:
-                    piece = self.find_piece_in_column(column, "pawn", "Black")
+                    piece = self.find_piece_in_column(column, "pawn", False)
 
             case 3:
                 # Handle moves with captures or special cases (e.g., 'Nxe5')
@@ -152,18 +152,18 @@ class Game:
                 pass
 
         # Create the tuple with the piece and destination indices
-        piece_and_destination_tuple = (piece, array_dest_x_y)
-
+        piece_and_destination_tuple = (piece.x,piece.y, array_dest_x_y)
+        print(piece_and_destination_tuple)
         return piece_and_destination_tuple
 
-    def find_piece_in_column(self, column, piece_type, color):
+    def find_piece_in_column(self, column, piece_type, is_white):
         for row, piece in enumerate(self.iterate_column(column)):
-            if piece and piece.type == piece_type and piece.color.lower() == color.lower():
+            if piece and piece.type == piece_type and piece.is_big == is_white:
                 return piece
         return None
 
     def iterate_column(self, column):
-        for row in range(7, -1, -1):  # Start from bottom (7) to top (0)
+        for row in range(7, -1, -1):  # Start from the bottom (row 7) to the top (row 0)
             yield self.pieces[row][column]
 
     def selected_object_isnt_empty(self, piece):
@@ -174,10 +174,10 @@ class Game:
 
     def chess_position_to_indices(self, pos):
         # מיפוי האותיות לעמודות (ציר X)
-        column = ord(self[0].lower()) - ord('a')
+        column = ord(pos[0].lower()) - ord('a')
 
         # מיפוי המספרים לשורות (ציר Y)
-        row = 8 - int(self[1])
+        row = 8 - int(pos[1])
 
         return row, column
 
