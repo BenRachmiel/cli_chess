@@ -129,13 +129,21 @@ class Game:
 
         # Extracting the chosen piece based on the length of the algebraic notation
         piece = Piece()
+        y = piece.y
         match len(algebraic_notation):
             case 2:
                 # Handle simple moves (e.g., 'h7')
+                # column for find)piece_in_column func
                 column = ord(algebraic_notation[0].lower()) - 97  # Convert letter to column index
                 if self.current_turn == "White":
+                    # capturing specific pawn object.
                     piece = self.find_piece_in_column(column, "pawn", True)
-                    self.move_piece("g2","g4")
+                    # casting pawn values to send them to move_object.
+                    start_position = (piece.x, piece.y)
+                    # start_position = self.convert_2d_array_indices_into_chess(str((piece.x, piece.y)))
+
+                    end_position = self.chess_position_to_indices(algebraic_notation)
+                    self.move_piece(start_position, end_position)
                 else:
                     piece = self.find_piece_in_column(column, "pawn", False)
 
@@ -226,8 +234,8 @@ class Game:
         # Get user input for the starting and target positions
 
         # Convert chess positions to array indices
-        start_row, start_col = self.chess_position_to_index(start_position)
-        end_row, end_col = self.chess_position_to_index(end_position)
+        start_row, start_col = start_position
+        end_row, end_col = end_position
 
         # Get the piece at the starting position
         current_piece = self.pieces[start_row][start_col]
@@ -253,3 +261,18 @@ class Game:
 
         # Display the board after the move
         self.print_board()
+
+    def convert_2d_array_indices_into_chess(self, algebraic_notation):
+        row = algebraic_notation[1]  # Corrected to use the first element for row
+        row = int(row)
+
+        column = algebraic_notation[4]  # Corrected to use the second element for column
+        column = int(column)  # Properly convert column to an integer
+
+        # Convert the column (X-axis) back to a letter
+        column_letter = chr(column + ord('a'))
+
+        # Convert the row (Y-axis) back to a number (chessboard rows are from 1 to 8)
+        row_number = 8 - row
+
+        return f"{column_letter}{row_number}"
