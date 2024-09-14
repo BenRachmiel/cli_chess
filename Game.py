@@ -155,9 +155,23 @@ class Game:
                     end_position = self.chess_position_to_indices(algebraic_notation)
                     self.move_piece(start_position, end_position)
             case 3:
-                # Handle moves with captures or special cases (e.g., 'Nxe5')
-                # Implement custom logic based on the algebraic notation
-                pass
+                if self.current_turn == "White":
+                    # capturing specific pawn object.
+                    piece = self.find_piece_in_column(column, "pawn", True)
+                    # casting pawn values to send them to move_object.
+                    start_position = (piece.x, piece.y)
+                    # start_position = self.convert_2d_array_indices_into_chess(str((piece.x, piece.y)))
+
+                    end_position = self.chess_position_to_indices(algebraic_notation)
+                    self.move_piece(start_position, end_position)
+                else:
+                    # capturing specific pawn object.
+                    piece = self.find_piece_in_column(column, "pawn", False)
+                    # casting pawn values to send them to move_object.
+                    start_position = (piece.x, piece.y)
+                    # start_position = self.convert_2d_array_indices_into_chess(str((piece.x, piece.y)))
+                    end_position = self.chess_position_to_indices(algebraic_notation)
+                    self.move_piece(start_position, end_position)
 
             case 4:
                 # Handle castling or promotion (e.g., 'e8=Q')
