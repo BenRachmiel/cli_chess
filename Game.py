@@ -215,21 +215,6 @@ class Game:
 
         return row_index, column_index
 
-    def chess_position_to_index(self, position):
-        """
-        Converts a chess position (e.g., 'e2') to 2D array indices.
-        """
-        column = position[0]
-        row = position[1]
-
-        # Convert column letter to index (a=0, b=1, ..., h=7)
-        column_index = ord(column.lower()) - ord('a')
-
-        # Convert row number to index (1=7, 2=6, ..., 8=0)
-        row_index = 8 - int(row)
-
-        return row_index, column_index
-
     def move_piece(self, start_position, end_position):
         # Get user input for the starting and target positions
 
@@ -253,7 +238,7 @@ class Game:
 
         # Update the board: Create a new tuple with the updated positions
         pieces_list = [list(row) for row in self.pieces]  # Create a copy of the board to update
-        pieces_list[start_row][start_col] = ""  # Remove the piece from the starting position
+        pieces_list[start_row][start_col] = "x"  # Remove the piece from the starting position
         pieces_list[end_row][end_col] = current_piece  # Move the piece to the target position
 
         # Convert the board back to tuples
