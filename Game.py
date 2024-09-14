@@ -25,6 +25,12 @@ class Game:
                 continue  # This will start the loop over
 
             piece_and_destination = self.create_object_and_dest_tuple_through_algebraic_notation(algebraic_notation)
+            if self.current_turn == "White":
+                self.current_turn = "Black"
+                continue
+            else:
+                self.current_turn = "White"
+                continue
 
             if not self.selected_object_isnt_empty(piece_and_destination[0]):
                 print("You chose an empty object. Please try again.")
@@ -43,10 +49,7 @@ class Game:
             if self.check_if_check():
                 # limit movements as required
                 pass
-            if self.current_turn == "White":
-                self.current_turn = "Black"
-            else:
-                self.current_turn = "White"
+
 
     def create_board(self):
 
@@ -129,7 +132,6 @@ class Game:
 
         # Extracting the chosen piece based on the length of the algebraic notation
         piece = Piece()
-        y = piece.y
         match len(algebraic_notation):
             case 2:
                 # Handle simple moves (e.g., 'h7')
@@ -145,8 +147,13 @@ class Game:
                     end_position = self.chess_position_to_indices(algebraic_notation)
                     self.move_piece(start_position, end_position)
                 else:
+                    # capturing specific pawn object.
                     piece = self.find_piece_in_column(column, "pawn", False)
-
+                    # casting pawn values to send them to move_object.
+                    start_position = (piece.x, piece.y)
+                    # start_position = self.convert_2d_array_indices_into_chess(str((piece.x, piece.y)))
+                    end_position = self.chess_position_to_indices(algebraic_notation)
+                    self.move_piece(start_position, end_position)
             case 3:
                 # Handle moves with captures or special cases (e.g., 'Nxe5')
                 # Implement custom logic based on the algebraic notation
@@ -161,8 +168,9 @@ class Game:
                 pass
 
         # Create the tuple with the piece and destination indices
-        piece_and_destination_tuple = (piece.x, piece.y, array_dest_x_y)
-        print(piece_and_destination_tuple)
+        print("hi")
+        piece_and_destination_tuple = (piece, end_position)
+
         return piece_and_destination_tuple
 
     def find_piece_in_column(self, column, piece_type, is_white):
