@@ -50,7 +50,6 @@ class Game:
                 # limit movements as required
                 pass
 
-
     def create_board(self):
 
         self.pieces[0][0] = rook_0_0 = Piece("rook", 0, 0, False, 'r')
@@ -117,10 +116,8 @@ class Game:
         # בדיקת חוקיות המהלך
 
         if self.check_input(move):
-            print("המהלך חוקי לפי הסימון האלגברי.")
             return True
         else:
-            print("המהלך לא חוקי לפי הסימון האלגברי.")
             return False
 
     # מהלך לפי סימון אלגברי (לדוגמה, Qxe4, exd5, או Qd4+):
@@ -155,6 +152,7 @@ class Game:
                     end_position = self.chess_position_to_indices(algebraic_notation)
                     self.move_piece(start_position, end_position)
             case 3:
+                column = ord(algebraic_notation[0].lower()) - 97
                 if self.current_turn == "White":
                     # capturing specific pawn object.
                     piece = self.find_piece_in_column(column, "pawn", True)
@@ -182,7 +180,6 @@ class Game:
                 pass
 
         # Create the tuple with the piece and destination indices
-        print("hi")
         piece_and_destination_tuple = (piece, end_position)
 
         return piece_and_destination_tuple
@@ -190,6 +187,7 @@ class Game:
     def find_piece_in_column(self, column, piece_type, is_white):
         for row, piece in enumerate(self.iterate_column(column)):
             if piece and piece.type == piece_type and piece.is_big == is_white:
+                print(piece.x, piece.y, piece.type)
                 return piece
         return None
 
@@ -259,8 +257,11 @@ class Game:
         print(f"{current_piece} moves to {end_position}")
 
         # Update the board: Create a new tuple with the updated positions
+
         pieces_list = [list(row) for row in self.pieces]  # Create a copy of the board to update
-        pieces_list[start_row][start_col] = "x"  # Remove the piece from the starting position
+        pieces_list[start_row][start_col] = Piece()
+        print(pieces_list[start_row][start_col].x, pieces_list[start_row][start_col].y,
+              pieces_list[start_row][start_col].type)  # Remove the piece from the starting position
         pieces_list[end_row][end_col] = current_piece  # Move the piece to the target position
 
         # Convert the board back to tuples
