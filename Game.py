@@ -45,7 +45,7 @@ class Game:
                 continue
 
             # If we've made it this far, the move is valid
-            self.move_piece(piece_and_destination)  # calls out check_if_takes()
+            # self.move_piece(piece_and_destination)  # calls out check_if_takes()
             if self.check_if_check():
                 # limit movements as required
                 pass
@@ -142,6 +142,7 @@ class Game:
                     # start_position = self.convert_2d_array_indices_into_chess(str((piece.x, piece.y)))
 
                     end_position = self.chess_position_to_indices(algebraic_notation)
+                    print(start_position, end_position)
                     self.move_piece(start_position, end_position)
                 else:
                     # capturing specific pawn object.
@@ -186,8 +187,8 @@ class Game:
 
     def find_piece_in_column(self, column, piece_type, is_white):
         for row, piece in enumerate(self.iterate_column(column)):
-            if piece and piece.type == piece_type and piece.is_big == is_white:
-                print(piece.x, piece.y, piece.type)
+            if piece.type == piece_type and piece.is_big == is_white:
+                print("piece that is gonna move:", piece.x, piece.y, piece.type)
                 return piece
         return None
 
@@ -243,29 +244,23 @@ class Game:
         end_row, end_col = end_position
 
         # Get the piece at the starting position
-        current_piece = self.pieces[start_row][start_col]
+        chosen_piece_to_move = self.pieces[start_row][start_col]
 
         # If there's no piece at the starting position, the move is invalid
-        if current_piece is None:
+        if chosen_piece_to_move.type == "piece":
             print("No piece at the starting position.")
             return
 
+        self.pieces[start_row][start_col] = Piece()
         # Get the piece at the target position (if any)
-        target_piece = self.pieces[end_row][end_col]
+        chosen_piece_to_move.x = end_row
+        chosen_piece_to_move.y = end_col
+        self.pieces[end_row][end_col] = chosen_piece_to_move
 
         # You can add logic here to check if the move is legal based on the piece type
-        print(f"{current_piece} moves to {end_position}")
+        print(f"{chosen_piece_to_move} moves to {end_position}")
 
         # Update the board: Create a new tuple with the updated positions
-
-        pieces_list = [list(row) for row in self.pieces]  # Create a copy of the board to update
-        pieces_list[start_row][start_col] = Piece()
-        print(pieces_list[start_row][start_col].x, pieces_list[start_row][start_col].y,
-              pieces_list[start_row][start_col].type)  # Remove the piece from the starting position
-        pieces_list[end_row][end_col] = current_piece  # Move the piece to the target position
-
-        # Convert the board back to tuples
-        self.pieces = tuple([tuple(row) for row in pieces_list])
 
         # Display the board after the move
         self.print_board()
